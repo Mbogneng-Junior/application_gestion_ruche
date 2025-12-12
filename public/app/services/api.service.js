@@ -1,9 +1,9 @@
 app.factory('ApiService', function($http, $q) {
     // Détection automatique de l'environnement
-    // En local (localhost) -> backend local
-    // En production (Vercel) -> backend déployé
+    // En local (localhost) -> backend local direct
+    // En production (Vercel) -> utiliser le proxy Vercel (même domaine)
     var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    var API_URL = isLocal ? 'http://localhost:3000/api/v1' : 'http://167.71.176.127:3000/api/v1';
+    var API_URL = isLocal ? 'http://localhost:3000/api/v1' : '/api/v1';
     
     console.log('API URL:', API_URL, '(isLocal:', isLocal, ')');
 
