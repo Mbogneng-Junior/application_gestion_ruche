@@ -1,7 +1,10 @@
 {
   "version": 2,
   "name": "bee2beep-frontend",
-  "public": true,
+  "buildCommand": "",
+  "installCommand": "",
+  "framework": null,
+  "outputDirectory": "public",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],
