@@ -1,13 +1,181 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="fr" ng-app="beeApp">
 <head>
-  <meta charset="utf-8">
-  <title>Bee2beepFrontend</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bee2Beep - Ruches Connectées</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Tailwind (Output) -->
+    <!-- <link href="./output.css" rel="stylesheet"> -->
+    
+    <!-- Mode Démo : Utilisation du CDN pour un rendu immédiat sans build step -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        honey: { 50: '#fffbeb', 100: '#fef3c7', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+                        tech: { 50: '#f8fafc', 800: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        [ng\:cloak], [ng-cloak], .ng-cloak { display: none !important; }
+    </style>
 </head>
-<body>
-  <app-root></app-root>
+<body ng-controller="MainCtrl" class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-honey-200 selection:text-honey-900 transition-colors duration-500" ng-class="{'dark': isDarkMode, 'bg-tech-950 text-slate-200': isDarkMode}">
+
+    <!-- Layout Principal -->
+    <div class="flex min-h-screen relative" ng-if="!isAuthPage()">
+
+        <!-- Mobile Overlay -->
+        <div ng-show="isSidebarOpen" ng-click="toggleSidebar()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"></div>
+
+        <!-- Sidebar (Fixed on Desktop) -->
+        <aside class="fixed inset-y-0 left-0 w-64 h-screen glass-panel m-0 md:m-4 md:h-[calc(100vh-2rem)] rounded-r-3xl md:rounded-3xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col"
+               ng-class="{'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen, 'md:translate-x-0': true}">
+            
+            <!-- Logo -->
+            <div class="h-24 flex items-center justify-center border-b border-slate-100 dark:border-slate-700/50 relative">
+                <div class="flex items-center gap-3">
+                    <div class="w-30 h-10 bg-white rounded-xl flex items-center justify-center shadow-glow overflow-hidden">
+                        <img src="public/logo.png" alt="Bee2Beep Logo" class="w-full h-full object-cover">
+                    </div>
+                    
+                </div>
+                <!-- Close Button (Mobile) -->
+                <button ng-click="toggleSidebar()" class="absolute right-4 top-1/2 -translate-y-1/2 md:hidden text-slate-400 hover:text-slate-600">
+                    <i class="ph-bold ph-x text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 py-8 flex flex-col gap-2 px-4 overflow-y-auto">
+                <a href="#!/" ng-click="closeSidebarMobile()" ng-class="{'bg-honey-50 text-honey-600 dark:bg-honey-500/10 dark:text-honey-400': isActive('/')}" class="flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-white hover:shadow-md group">
+                    <i class="ph ph-squares-four text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium">Tableau de bord</span>
+                </a>
+                <a href="#!/ruches" ng-click="closeSidebarMobile()" ng-class="{'bg-honey-50 text-honey-600 dark:bg-honey-500/10 dark:text-honey-400': isActive('/ruches')}" class="flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-white hover:shadow-md group">
+                    <i class="ph ph-archive-box text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium">Mes Ruches</span>
+                </a>
+                <a href="#!/ruchers" ng-click="closeSidebarMobile()" ng-class="{'bg-honey-50 text-honey-600 dark:bg-honey-500/10 dark:text-honey-400': isActive('/ruchers')}" class="flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-white hover:shadow-md group">
+                    <i class="ph ph-map-trifold text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium">Mes Ruchers</span>
+                </a>
+                <a href="#!/balance" ng-click="closeSidebarMobile()" ng-class="{'bg-honey-50 text-honey-600 dark:bg-honey-500/10 dark:text-honey-400': isActive('/balance')}" class="flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-white hover:shadow-md group">
+                    <i class="ph ph-scales text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium">Ma Balance</span>
+                </a>
+                <a href="#!/alertes" ng-click="closeSidebarMobile()" ng-class="{'bg-honey-50 text-honey-600 dark:bg-honey-500/10 dark:text-honey-400': isActive('/alertes')}" class="flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-white hover:shadow-md group">
+                    <i class="ph ph-bell-ringing text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium">Alertes</span>
+                </a>
+                <a href="#!/compte" ng-click="closeSidebarMobile()" ng-class="{'bg-honey-50 text-honey-600 dark:bg-honey-500/10 dark:text-honey-400': isActive('/compte')}" class="flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-white hover:shadow-md group">
+                    <i class="ph ph-user-gear text-2xl group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium">Mon Compte</span>
+                </a>
+            </nav>
+
+            <!-- User & Settings -->
+            <div class="p-4 border-t border-slate-100 dark:border-slate-700/50">
+                <button ng-click="toggleDarkMode()" class="w-full flex items-center justify-start gap-4 p-4 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <i class="ph" ng-class="isDarkMode ? 'ph-sun text-honey-400' : 'ph-moon text-slate-600'"></i>
+                    <span class="font-medium text-sm">Mode {{isDarkMode ? 'Clair' : 'Sombre'}}</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content (with left margin for fixed sidebar) -->
+        <main class="flex-1 relative w-full flex flex-col md:ml-72">
+            
+            <!-- Top Header (Desktop - Fixed) -->
+            <header class="hidden md:flex h-20 items-center justify-between px-8 border-b border-slate-100 dark:border-slate-700/50 bg-white/80 dark:bg-tech-900/80 backdrop-blur-md fixed top-0 right-0 left-0 md:left-72 z-30">
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-white">
+                    <span class="text-honey-500">Tableau de bord</span>
+                </h2>
+                
+                <div class="flex items-center gap-6">
+                    <!-- Notifications -->
+                    <button class="relative p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-300">
+                        <i class="ph-bold ph-bell text-xl"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-tech-900"></span>
+                    </button>
+
+                    <!-- Profile Dropdown -->
+                    <div class="flex items-center gap-3 pl-6 border-l border-slate-200 dark:border-slate-700">
+                        <div class="text-right hidden lg:block">
+                            <p class="text-sm font-bold text-slate-800 dark:text-white">Jérôme Clerjeau</p>
+                            <p class="text-xs text-slate-500">Apiculteur</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-honey-100 text-honey-600 flex items-center justify-center font-bold border-2 border-white shadow-sm cursor-pointer hover:ring-2 ring-honey-400 transition-all" ng-click="logout()" title="Se déconnecter">
+                            JC
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Header Mobile -->
+            <header class="md:hidden h-16 flex items-center justify-between px-6 glass-panel m-4 rounded-2xl sticky top-4 z-40">
+                <button ng-click="toggleSidebar()" class="w-10 h-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                    <i class="ph-bold ph-list text-2xl text-slate-700 dark:text-white"></i>
+                </button>
+                
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                        <img src="public/logo.png" alt="Bee2Beep Logo" class="w-full h-full object-cover">
+                    </div>
+                    <span class="font-bold text-lg">Bee2Beep</span>
+                </div>
+
+                <div class="w-10"></div> <!-- Spacer for centering -->
+            </header>
+
+            <!-- View Injection (with top padding for fixed header) -->
+            <div class="p-4 md:p-8 pb-8 md:pt-28 max-w-full view-animate-container overflow-x-hidden">
+                <div ng-view class="view-animate"></div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Auth Layout (Login/Register) -->
+    <div ng-if="isAuthPage()" class="min-h-screen bg-slate-50 dark:bg-tech-950">
+        <div ng-view class="view-animate"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- App Logic -->
+    <script src="app/app.js"></script>
+    <script src="app/services/api.service.js"></script>
+    <script src="app/controllers/DashboardController.js"></script>
+    <script src="app/controllers/RuchesController.js"></script>
+    <script src="app/controllers/RuchersController.js"></script>
+    <script src="app/controllers/BalanceController.js"></script>
+    <script src="app/controllers/AlertesController.js"></script>
+    <script src="app/controllers/CompteController.js"></script>
+    <script src="app/controllers/AuthController.js"></script>
 </body>
 </html>

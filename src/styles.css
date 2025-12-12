@@ -1,3 +1,118 @@
-/* You can add global styles to this file, and also import other style files */
+/* Bee2Beep - Custom Styles */
+/* Note: Using Tailwind CDN in index.html, so no @tailwind directives needed here */
 
-@import "tailwindcss";
+/* Custom Scrollbar pour un look plus tech */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Glassmorphism Utilities - Pure CSS */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(51, 65, 85, 0.5);
+}
+
+/* Shadow Glow Effect */
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+
+/* Shadow Glass */
+.shadow-glass {
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+/* Leaflet Map Customization */
+.leaflet-container {
+  font-family: 'Inter', sans-serif;
+  z-index: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border: 1px solid #fef3c7;
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  width: 200px !important;
+}
+
+/* Animations de transition de vue AngularJS */
+.view-animate-container {
+  position: relative;
+}
+
+.view-animate {
+  display: block;
+  width: 100%;
+}
+
+.view-animate.ng-enter, .view-animate.ng-leave {
+  transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.view-animate.ng-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.view-animate.ng-enter.ng-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.view-animate.ng-leave.ng-leave-active {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* Custom Map Marker */
+.custom-marker {
+  background: transparent;
+  border: none;
+}
+
+/* Slow spin animation for weather icons */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}

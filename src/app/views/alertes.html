@@ -1,0 +1,47 @@
+<div class="space-y-6">
+    <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Mes Alertes</h2>
+
+    <div class="glass-panel p-6 rounded-3xl">
+        <h3 class="font-bold mb-4">Ajouter une règle</h3>
+        <div class="flex flex-wrap items-center gap-3 text-lg font-medium text-slate-600 dark:text-slate-300">
+            <span>Si</span>
+            <select class="bg-honey-100 text-honey-700 px-3 py-1 rounded-lg border-none cursor-pointer hover:bg-honey-200 transition-colors">
+                <option>le Poids</option>
+                <option>la Température</option>
+            </select>
+            <span>est</span>
+            <select class="bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-lg border-none cursor-pointer">
+                <option>inférieur à</option>
+                <option>supérieur à</option>
+            </select>
+            <input type="number" value="10" class="w-20 bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-lg border-none text-center">
+            <span>alors envoyer un</span>
+            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-lg flex items-center gap-2">
+                <i class="ph-fill ph-chat-circle-text"></i> SMS
+            </span>
+            <button class="ml-auto px-6 py-2 bg-honey-500 text-white rounded-xl shadow-glow hover:scale-105 transition-transform">
+                Créer
+            </button>
+        </div>
+    </div>
+
+    <div class="grid gap-4">
+        <div ng-repeat="alerte in alertes" class="glass-panel p-4 rounded-2xl flex items-center justify-between group hover:border-honey-300 transition-colors">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center" ng-class="alerte.type === 'Variation' ? 'bg-purple-100 text-purple-600' : 'bg-red-100 text-red-600'">
+                    <i class="ph-fill text-2xl" ng-class="alerte.type === 'Variation' ? 'ph-trend-up' : 'ph-warning'"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-800 dark:text-white">{{alerte.type}}</h4>
+                    <p class="text-sm text-slate-500">{{alerte.condition}}</p>
+                </div>
+            </div>
+            
+            <!-- iOS Toggle Switch -->
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer" ng-model="alerte.active">
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-honey-500"></div>
+            </label>
+        </div>
+    </div>
+</div>

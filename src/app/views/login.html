@@ -1,0 +1,54 @@
+<!-- Login View -->
+<div class="min-h-screen flex items-center justify-center p-4">
+    <div class="glass-panel p-8 rounded-3xl w-full max-w-md relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-honey-400/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-400/20 rounded-full blur-3xl"></div>
+
+        <div class="text-center mb-8 relative z-10">
+            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-glow mx-auto mb-4">
+                <img src="public/logo.png" alt="Bee2Beep Logo" class="w-full h-full object-cover rounded-xl">
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Bienvenue sur Bee2Beep</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">Connectez-vous pour gérer vos ruches</p>
+        </div>
+
+        <form ng-submit="login()" class="space-y-6 relative z-10">
+            <!-- Error Message -->
+            <div ng-if="error" class="bg-red-50 text-red-500 p-3 rounded-xl text-sm font-medium flex items-center gap-2">
+                <i class="ph-bold ph-warning-circle"></i> {{error}}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email</label>
+                <div class="relative">
+                    <input type="email" ng-model="user.email" required 
+                           class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-honey-500 transition-all"
+                           placeholder="votre@email.com">
+                    <i class="ph-bold ph-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Mot de passe</label>
+                <div class="relative">
+                    <input type="password" ng-model="user.password" required 
+                           class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-honey-500 transition-all"
+                           placeholder="••••••••">
+                    <i class="ph-bold ph-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                </div>
+            </div>
+
+            <button type="submit" ng-disabled="loading" 
+                    class="w-full py-3 rounded-xl bg-honey-500 text-white font-bold shadow-glow hover:bg-honey-600 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
+                <span ng-if="!loading">Se connecter</span>
+                <span ng-if="loading"><i class="ph-bold ph-spinner animate-spin"></i> Connexion...</span>
+            </button>
+        </form>
+
+        <div class="mt-6 text-center text-sm text-slate-500 relative z-10">
+            Pas encore de compte ? 
+            <a href="#!/register" class="text-honey-500 font-bold hover:underline">S'inscrire</a>
+        </div>
+    </div>
+</div>
