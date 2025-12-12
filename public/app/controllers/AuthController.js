@@ -55,8 +55,14 @@ app.controller('AuthController', function($scope, $location, ApiService) {
             })
             .catch(function(error) {
                 console.error("Register error:", error);
+                console.error("Error status:", error.status);
+                console.error("Error data:", error.data);
+                
                 if (error.status === 0 || error.status === -1) {
-                    $scope.error = "Impossible de contacter le serveur. Vérifiez votre connexion ou le serveur est peut-être hors ligne.";
+                    // Vérifier si c'est un problème de Mixed Content (HTTPS -> HTTP)
+                    var isHttps = window.location.protocol === 'https:';
+                    $scope.error = "Impossible de contacter le serveur. " + 
+                        (isHttps ? "(Problème Mixed Content: le site est en HTTPS mais le backend en HTTP)" : "Vérifiez votre connexion.");
                 } else {
                     $scope.error = error.data && error.data.message ? error.data.message : "Erreur lors de l'inscription.";
                 }
