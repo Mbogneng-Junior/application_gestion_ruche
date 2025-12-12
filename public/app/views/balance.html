@@ -1,0 +1,67 @@
+<div class="space-y-6">
+    <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Ma Balance</h2>
+
+    <!-- Wizard d'ajout -->
+    <div class="glass-panel p-8 rounded-3xl">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-honey-500 text-white flex items-center justify-center font-bold shadow-glow">1</div>
+                <div class="h-1 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 flex items-center justify-center font-bold">2</div>
+                <div class="h-1 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 flex items-center justify-center font-bold">3</div>
+            </div>
+            <button class="text-honey-600 font-medium hover:underline">+ Ajouter une balance</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Numéro de série (ID)</label>
+                <input type="text" placeholder="Ex: B2B-2023-XYZ" class="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-honey-500 transition-all">
+            </div>
+            <div class="flex items-end">
+                <button class="w-full p-4 rounded-2xl bg-slate-800 dark:bg-white text-white dark:text-slate-900 font-bold hover:shadow-lg transition-all">
+                    Vérifier la disponibilité
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logs Bruts -->
+    <div class="glass-panel rounded-3xl overflow-hidden">
+        <div class="p-6 border-b border-slate-100 dark:border-slate-700/50 flex justify-between items-center">
+            <h3 class="font-bold">Logs des relevés</h3>
+            <div class="relative">
+                <input type="text" placeholder="Rechercher..." class="pl-10 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border-none text-sm focus:ring-2 focus:ring-honey-500">
+                <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            </div>
+        </div>
+        <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 dark:bg-slate-800/50">
+                <tr>
+                    <th class="p-4 font-medium text-slate-500">Date</th>
+                    <th class="p-4 font-medium text-slate-500">Poids (Kg)</th>
+                    <th class="p-4 font-medium text-slate-500">Temp (°C)</th>
+                    <th class="p-4 font-medium text-slate-500">Humidité (%)</th>
+                    <th class="p-4 font-medium text-slate-500">Batterie (%)</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-700/50">
+                <tr ng-repeat="log in logs" class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="p-4">{{log.date}}</td>
+                    <td class="p-4 font-bold">{{log.poids}}</td>
+                    <td class="p-4">{{log.temp}}</td>
+                    <td class="p-4">{{log.hum}}</td>
+                    <td class="p-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-2 bg-slate-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500" style="width: {{log.bat}}%"></div>
+                            </div>
+                            {{log.bat}}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
