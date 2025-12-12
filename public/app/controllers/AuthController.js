@@ -29,19 +29,37 @@ app.controller('AuthController', function($scope, $location, ApiService) {
         $scope.loading = true;
         $scope.error = null;
 
-        ApiService.register($scope.user)
+        // Préparer les données
+        var userData = {
+            email: $scope.user.email,
+            password: $scope.user.password,
+            prenom: $scope.user.prenom,
+            nom: $scope.user.nom,
+            telephone: $scope.user.telephone || ''
+        };
+
+        console.log("Registering user:", userData);
+
+        ApiService.register(userData)
             .then(function(response) {
-                // Connexion automatique après inscription ou redirection vers login
-                // Ici on redirige vers login pour faire simple, ou on connecte direct
-                // On va connecter direct si le backend renvoie un token, sinon login
-                
-                // Pour l'instant, on redirige vers login avec un message (ou on connecte auto si on implémente le login auto)
-                // On va appeler login()
-                $scope.login(); 
+                console.log("Register success:", response);
+                // Le backend renvoie un token, on connecte directement
+                if (response.data && response.data.token) {
+                    localStorage.setItem('auth_token', response.data.token);
+                    localStorage.setItem('user_info', JSON.stringify(response.data.user));
+                    $location.path('/');
+                } else {
+                    // Sinon redirection vers login
+                    $location.path('/login');
+                }
             })
             .catch(function(error) {
                 console.error("Register error:", error);
-                $scope.error = error.data && error.data.message ? error.data.message : "Erreur lors de l'inscription.";
+                if (error.status === 0 || error.status === -1) {
+                    $scope.error = "Impossible de contacter le serveur. Vérifiez votre connexion ou le serveur est peut-être hors ligne.";
+                } else {
+                    $scope.error = error.data && error.data.message ? error.data.message : "Erreur lors de l'inscription.";
+                }
             })
             .finally(function() {
                 $scope.loading = false;
