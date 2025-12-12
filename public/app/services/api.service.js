@@ -1,11 +1,11 @@
 app.factory('ApiService', function($http, $q) {
-    // Détection automatique de l'environnement
-    // En local (localhost) -> backend local direct
-    // En production (Vercel) -> utiliser le proxy Vercel (même domaine)
+    // Détection de l'environnement
     var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    // En local : on tape directement sur le backend local (port 3000)
+    // En prod (Vercel) : on utilise le chemin relatif /api/v1 qui est proxifié par Vercel vers le backend distant
     var API_URL = isLocal ? 'http://localhost:3000/api/v1' : '/api/v1';
     
-    console.log('API URL:', API_URL, '(isLocal:', isLocal, ')');
+    console.log('API URL:', API_URL, ' (isLocal:', isLocal, ')');
 
     // Helper pour ajouter le token (à implémenter avec AuthService)
     function getHeaders() {

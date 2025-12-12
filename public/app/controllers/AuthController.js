@@ -29,43 +29,19 @@ app.controller('AuthController', function($scope, $location, ApiService) {
         $scope.loading = true;
         $scope.error = null;
 
-        // Préparer les données
-        var userData = {
-            email: $scope.user.email,
-            password: $scope.user.password,
-            prenom: $scope.user.prenom,
-            nom: $scope.user.nom,
-            telephone: $scope.user.telephone || ''
-        };
-
-        console.log("Registering user:", userData);
-
-        ApiService.register(userData)
+        ApiService.register($scope.user)
             .then(function(response) {
-                console.log("Register success:", response);
-                // Le backend renvoie un token, on connecte directement
-                if (response.data && response.data.token) {
-                    localStorage.setItem('auth_token', response.data.token);
-                    localStorage.setItem('user_info', JSON.stringify(response.data.user));
-                    $location.path('/');
-                } else {
-                    // Sinon redirection vers login
-                    $location.path('/login');
-                }
+                // Connexion automatique après inscription ou redirection vers login
+                // Ici on redirige vers login pour faire simple, ou on connecte direct
+                // On va connecter direct si le backend renvoie un token, sinon login
+                
+                // Pour l'instant, on redirige vers login avec un message (ou on connecte auto si on implémente le login auto)
+                // On va appeler login()
+                $scope.login(); 
             })
             .catch(function(error) {
                 console.error("Register error:", error);
-                console.error("Error status:", error.status);
-                console.error("Error data:", error.data);
-                
-                if (error.status === 0 || error.status === -1) {
-                    // Vérifier si c'est un problème de Mixed Content (HTTPS -> HTTP)
-                    var isHttps = window.location.protocol === 'https:';
-                    $scope.error = "Impossible de contacter le serveur. " + 
-                        (isHttps ? "(Problème Mixed Content: le site est en HTTPS mais le backend en HTTP)" : "Vérifiez votre connexion.");
-                } else {
-                    $scope.error = error.data && error.data.message ? error.data.message : "Erreur lors de l'inscription.";
-                }
+                $scope.error = error.data && error.data.message ? error.data.message : "Erreur lors de l'inscription.";
             })
             .finally(function() {
                 $scope.loading = false;
